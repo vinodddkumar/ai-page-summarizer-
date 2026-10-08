@@ -131,8 +131,11 @@ async function summarize(title, text) {
   });
 
   if (res.status === 429) throw new UserError("The free AI limit was reached. Wait a minute and retry.", 429);
-  if (!res.ok) throw new UserError("The AI service returned an error. Try again.", 502);
-
+    if (!res.ok) {
+    const detail = await res.text();
+    console.error("Groq error", res.status, detail);
+    throw new UserError(`The AI service returned an error (${res.status}).`, 502);
+  }
   const data = await res.json();
   return data.choices?.[0]?.message?.content?.trim() || "";
 }
