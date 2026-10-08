@@ -8,7 +8,7 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
-const GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+const GROQ_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
 const MAX_CHARS = 12000; // keep the prompt small for the free tier
 
 app.use(express.json());
@@ -115,7 +115,8 @@ async function summarize(title, text) {
     body: JSON.stringify({
       model: GROQ_MODEL,
       temperature: 0.3,
-      max_tokens: 450,
+            max_tokens: 2000,
+      reasoning_effort: "low",
       messages: [
         {
           role: "system",
